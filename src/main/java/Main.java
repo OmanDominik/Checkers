@@ -6,7 +6,7 @@ public class Main {
         //2 - the best heuristic
         int heuristicNumber = 2;
         //game.startGamePVPWithMinMaxAndEvaluation(heuristicNumber);
-        game.startGameAIvsAI(heuristicNumber, "minmax");
+        game.startGameAIvsAI(heuristicNumber, "alfabeta");
         //game.startGameWhiteVsAI(heuristicNumber, "minmax");
         //game.startGameBlackVsAI(heuristicNumber, "minmax");
     }

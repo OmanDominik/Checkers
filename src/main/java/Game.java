@@ -9,9 +9,11 @@ import java.util.stream.Collectors;
 @Setter
 public class Game {
     private static final int BOARD_SIZE = 8;
-    private static final int MIN_MAX_DEPTH = 6;
+    private static final int MIN_MAX_DEPTH = 7;
     private List<List<Character>> board;
     int queensMoves = 0;
+    int searchedStates = 0;
+    List<Integer> numberOfSearchedStates = new ArrayList<>();
 
     public Game() {
         reset();
@@ -164,6 +166,7 @@ public class Game {
     }
 
     public void startGameAIvsAI(int heuristicNumber, String method) {
+        numberOfSearchedStates.clear();
         queensMoves = 0;
         int whiteMoves = 0;
         int blackMoves = 0;
@@ -185,7 +188,11 @@ public class Game {
                 System.out.println(Colors.ANSI_CYAN + "Blacks won!!!");
                 System.out.println(Colors.ANSI_YELLOW + "Time spent for black moves: " +
                         (double) (blackTime.stream().collect(Collectors.summingLong(Long::longValue))) / 1000d + " seconds");
+                System.out.println(Colors.ANSI_YELLOW + "Average time spent for black move: " +
+                        (double) (blackTime.stream().collect(Collectors.summingLong(Long::longValue))) / 1000d / blackTime.size() + " seconds");
                 System.out.println("Black moves: " + blackMoves);
+                System.out.println(Colors.ANSI_YELLOW + "Average number of states searched with chosen algorithm: "
+                        + ((numberOfSearchedStates.stream().collect(Collectors.summingInt(Integer::intValue))) / numberOfSearchedStates.size()));
                 break;
             }
 
@@ -196,7 +203,11 @@ public class Game {
                 System.out.println(Colors.ANSI_CYAN + "Blacks won!!!");
                 System.out.println(Colors.ANSI_YELLOW + "Time spent for black moves: " +
                         (double) (blackTime.stream().collect(Collectors.summingLong(Long::longValue))) / 1000d + " seconds");
+                System.out.println(Colors.ANSI_YELLOW + "Average time spent for black move: " +
+                        (double) (blackTime.stream().collect(Collectors.summingLong(Long::longValue))) / 1000d / blackTime.size() + " seconds");
                 System.out.println("Black moves: " + blackMoves);
+                System.out.println(Colors.ANSI_YELLOW + "Average number of states searched with chosen algorithm: "
+                        + ((numberOfSearchedStates.stream().collect(Collectors.summingInt(Integer::intValue))) / numberOfSearchedStates.size()));
                 break;
             }
 
@@ -213,7 +224,11 @@ public class Game {
                 System.out.println(Colors.ANSI_CYAN + "Whites won!!!");
                 System.out.println(Colors.ANSI_YELLOW + "Time spent for white moves: " +
                         (double) (whiteTime.stream().collect(Collectors.summingLong(Long::longValue))) / 1000d + " seconds");
+                System.out.println(Colors.ANSI_YELLOW + "Average time spent for white move: " +
+                        (double) (whiteTime.stream().collect(Collectors.summingLong(Long::longValue))) / 1000d / whiteTime.size() + " seconds");
                 System.out.println("White moves: " + whiteMoves);
+                System.out.println(Colors.ANSI_YELLOW + "Average number of states searched with chosen algorithm: "
+                        + ((numberOfSearchedStates.stream().collect(Collectors.summingInt(Integer::intValue))) / numberOfSearchedStates.size()));
                 break;
             }
 
@@ -224,7 +239,11 @@ public class Game {
                 System.out.println(Colors.ANSI_CYAN + "Whites won!!!");
                 System.out.println(Colors.ANSI_YELLOW + "Time spent for white moves: " +
                         (double) (whiteTime.stream().collect(Collectors.summingLong(Long::longValue))) / 1000d + " seconds");
+                System.out.println(Colors.ANSI_YELLOW + "Average time spent for white move: " +
+                        (double) (whiteTime.stream().collect(Collectors.summingLong(Long::longValue))) / 1000d / whiteTime.size() + " seconds");
                 System.out.println("White moves: " + whiteMoves);
+                System.out.println(Colors.ANSI_YELLOW + "Average number of states searched with chosen algorithm: "
+                        + ((numberOfSearchedStates.stream().collect(Collectors.summingInt(Integer::intValue))) / numberOfSearchedStates.size()));
                 break;
             }
 
@@ -238,10 +257,16 @@ public class Game {
             System.out.println(Colors.ANSI_CYAN + "It's a draw!!!");
             System.out.println(Colors.ANSI_YELLOW + "Time spent for white moves: " +
                     (double) (whiteTime.stream().collect(Collectors.summingLong(Long::longValue))) / 1000d + " seconds");
+            System.out.println(Colors.ANSI_YELLOW + "Average time spent for black move: " +
+                    (double) (blackTime.stream().collect(Collectors.summingLong(Long::longValue))) / 1000d / blackTime.size() + " seconds");
             System.out.println("White moves: " + whiteMoves);
             System.out.println(Colors.ANSI_YELLOW + "Time spent for black moves: " +
                     (double) (blackTime.stream().collect(Collectors.summingLong(Long::longValue))) / 1000d + " seconds");
+            System.out.println(Colors.ANSI_YELLOW + "Average time spent for white move: " +
+                    (double) (whiteTime.stream().collect(Collectors.summingLong(Long::longValue))) / 1000d / whiteTime.size() + " seconds");
             System.out.println("Black moves: " + blackMoves);
+            System.out.println(Colors.ANSI_YELLOW + "Average number of states searched with chosen algorithm: "
+                    + ((numberOfSearchedStates.stream().collect(Collectors.summingInt(Integer::intValue))) / numberOfSearchedStates.size()));
         }
         System.out.println(Colors.ANSI_BLUE + "Thanks for game!");
         reset();
@@ -1074,8 +1099,9 @@ public class Game {
 
     private String returnSuggestedMove(String color, List<List<Character>> gameBoard, int heuristicNumber, String option) {
         String move;
-        int minMax;
-        int alfabeta;
+        int minMax = 0;
+        int alfabeta = 0;
+        searchedStates = 0;
 
         TreeNode root = new TreeNode(gameBoard, evaluation(gameBoard, heuristicNumber), "-");
         buildChoicesTree(root, 0, color, heuristicNumber);
@@ -1083,9 +1109,8 @@ public class Game {
             minMax = findBestMoveMinMax(root, 0, color);
         else if (option == "alfabeta")
             alfabeta = findBestMoveAlfaBeta(root, 0, color, Integer.MIN_VALUE, Integer.MAX_VALUE);
-
         move = root.getMove();
-
+        numberOfSearchedStates.add(searchedStates);
         return move;
     }
 
@@ -1131,6 +1156,7 @@ public class Game {
                     if (depth == 0)
                         root.setMove(children.get(i).getMove());
                 }
+                searchedStates++;
             }
             return maximum;
         } else if (actualColor == "blacks") {
@@ -1145,6 +1171,7 @@ public class Game {
                     if (depth == 0)
                         root.setMove(children.get(i).getMove());
                 }
+                searchedStates++;
             }
             return minimum;
         }
@@ -1168,6 +1195,7 @@ public class Game {
                     if (depth == 0)
                         root.setMove(children.get(i).getMove());
                 }
+                searchedStates++;
                 alfa = Math.max(alfa, value);
                 if (beta <= alfa)
                     break;
@@ -1184,6 +1212,7 @@ public class Game {
                     if (depth == 0)
                         root.setMove(children.get(i).getMove());
                 }
+                searchedStates++;
                 beta = Math.min(beta, value);
                 if (beta <= alfa)
                     break;
