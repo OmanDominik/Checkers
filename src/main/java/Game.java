@@ -9,7 +9,7 @@ import java.util.stream.Collectors;
 @Setter
 public class Game {
     private static final int BOARD_SIZE = 8;
-    private static final int MIN_MAX_DEPTH = 7;
+    private static final int MIN_MAX_DEPTH = 6;
     private List<List<Character>> board;
     int queensMoves = 0;
 
@@ -165,6 +165,15 @@ public class Game {
 
     public void startGameAIvsAI(int heuristicNumber) {
         queensMoves = 0;
+        int whiteMoves=0;
+        int blackMoves=0;
+        List<Long> whiteTime = new ArrayList<>();
+        List<Long> blackTime = new ArrayList<>();
+        long beforeWhiteMove;
+        long afterWhiteMove;
+        long beforeBlackMove;
+        long afterBlackMove;
+
         String move;
         List<String> possibleMoves = new ArrayList<>();
         System.out.println(Colors.ANSI_PURPLE + "THE GAME HAS STARTED!!!" + Colors.ANSI_RESET);
@@ -178,6 +187,7 @@ public class Game {
             }
 
             System.out.println(Colors.ANSI_RED + "White's turn");
+            beforeWhiteMove = System.currentTimeMillis();
             possibleMoves = getWhitePossibleMoves(board);
             if (possibleMoves.isEmpty()) {
                 System.out.println(Colors.ANSI_CYAN + "Blacks won!!!");
@@ -186,6 +196,9 @@ public class Game {
 
             move = returnSuggestedMove("whites", deepCopy(board), heuristicNumber);
             makeMove(board, move, true);
+            whiteMoves++;
+            afterWhiteMove = System.currentTimeMillis();
+            whiteTime.add(afterWhiteMove-beforeWhiteMove);
 
             System.out.println(Colors.ANSI_GREEN + "The state of the board:" + Colors.ANSI_RESET);
             displayBoard();
@@ -196,6 +209,7 @@ public class Game {
             }
 
             System.out.println(Colors.ANSI_RED + "Black's turn");
+            beforeBlackMove = System.currentTimeMillis();
             possibleMoves = getBlackPossibleMoves(board);
             if (possibleMoves.isEmpty()) {
                 System.out.println(Colors.ANSI_CYAN + "Whites won!!!");
@@ -204,9 +218,18 @@ public class Game {
 
             move = returnSuggestedMove("blacks", deepCopy(board), heuristicNumber);
             makeMove(board, move, true);
+            blackMoves++;
+            afterBlackMove = System.currentTimeMillis();
+            blackTime.add(afterBlackMove-beforeBlackMove);
         }
         if (queensMoves >= 15) {
             System.out.println(Colors.ANSI_CYAN + "It's a draw!!!");
+            System.out.println(Colors.ANSI_YELLOW + "Time spent for white moves: " +
+                    (whiteTime.stream().collect(Collectors.summingLong(Long::longValue)))/1000 + " seconds");
+            System.out.println("White moves: " + whiteMoves);
+            System.out.println(Colors.ANSI_YELLOW + "Time spent for black moves: " +
+                    (blackTime.stream().collect(Collectors.summingLong(Long::longValue)))/1000 + " seconds");
+            System.out.println("Black moves: " + blackMoves);
         }
         System.out.println(Colors.ANSI_BLUE + "Thanks for game!");
         reset();
