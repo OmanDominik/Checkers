@@ -191,6 +191,11 @@ public class Game {
                 System.out.println(Colors.ANSI_YELLOW + "Average time spent for black move: " +
                         (double) (blackTime.stream().collect(Collectors.summingLong(Long::longValue))) / 1000d / blackTime.size() + " seconds");
                 System.out.println("Black moves: " + blackMoves);
+                System.out.println(Colors.ANSI_YELLOW + "Time spent for white moves: " +
+                        (double) (whiteTime.stream().collect(Collectors.summingLong(Long::longValue))) / 1000d + " seconds");
+                System.out.println(Colors.ANSI_YELLOW + "Average time spent for white move: " +
+                        (double) (whiteTime.stream().collect(Collectors.summingLong(Long::longValue))) / 1000d / whiteTime.size() + " seconds");
+                System.out.println("White moves: " + whiteMoves);
                 System.out.println(Colors.ANSI_YELLOW + "Average number of states searched with chosen algorithm: "
                         + ((numberOfSearchedStates.stream().collect(Collectors.summingInt(Integer::intValue))) / numberOfSearchedStates.size()));
                 break;
@@ -206,6 +211,11 @@ public class Game {
                 System.out.println(Colors.ANSI_YELLOW + "Average time spent for black move: " +
                         (double) (blackTime.stream().collect(Collectors.summingLong(Long::longValue))) / 1000d / blackTime.size() + " seconds");
                 System.out.println("Black moves: " + blackMoves);
+                System.out.println(Colors.ANSI_YELLOW + "Time spent for white moves: " +
+                        (double) (whiteTime.stream().collect(Collectors.summingLong(Long::longValue))) / 1000d + " seconds");
+                System.out.println(Colors.ANSI_YELLOW + "Average time spent for white move: " +
+                        (double) (whiteTime.stream().collect(Collectors.summingLong(Long::longValue))) / 1000d / whiteTime.size() + " seconds");
+                System.out.println("White moves: " + whiteMoves);
                 System.out.println(Colors.ANSI_YELLOW + "Average number of states searched with chosen algorithm: "
                         + ((numberOfSearchedStates.stream().collect(Collectors.summingInt(Integer::intValue))) / numberOfSearchedStates.size()));
                 break;
@@ -227,6 +237,11 @@ public class Game {
                 System.out.println(Colors.ANSI_YELLOW + "Average time spent for white move: " +
                         (double) (whiteTime.stream().collect(Collectors.summingLong(Long::longValue))) / 1000d / whiteTime.size() + " seconds");
                 System.out.println("White moves: " + whiteMoves);
+                System.out.println(Colors.ANSI_YELLOW + "Time spent for black moves: " +
+                        (double) (blackTime.stream().collect(Collectors.summingLong(Long::longValue))) / 1000d + " seconds");
+                System.out.println(Colors.ANSI_YELLOW + "Average time spent for black move: " +
+                        (double) (blackTime.stream().collect(Collectors.summingLong(Long::longValue))) / 1000d / blackTime.size() + " seconds");
+                System.out.println("Black moves: " + blackMoves);
                 System.out.println(Colors.ANSI_YELLOW + "Average number of states searched with chosen algorithm: "
                         + ((numberOfSearchedStates.stream().collect(Collectors.summingInt(Integer::intValue))) / numberOfSearchedStates.size()));
                 break;
@@ -242,6 +257,11 @@ public class Game {
                 System.out.println(Colors.ANSI_YELLOW + "Average time spent for white move: " +
                         (double) (whiteTime.stream().collect(Collectors.summingLong(Long::longValue))) / 1000d / whiteTime.size() + " seconds");
                 System.out.println("White moves: " + whiteMoves);
+                System.out.println(Colors.ANSI_YELLOW + "Time spent for black moves: " +
+                        (double) (blackTime.stream().collect(Collectors.summingLong(Long::longValue))) / 1000d + " seconds");
+                System.out.println(Colors.ANSI_YELLOW + "Average time spent for black move: " +
+                        (double) (blackTime.stream().collect(Collectors.summingLong(Long::longValue))) / 1000d / blackTime.size() + " seconds");
+                System.out.println("Black moves: " + blackMoves);
                 System.out.println(Colors.ANSI_YELLOW + "Average number of states searched with chosen algorithm: "
                         + ((numberOfSearchedStates.stream().collect(Collectors.summingInt(Integer::intValue))) / numberOfSearchedStates.size()));
                 break;
