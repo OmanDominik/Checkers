@@ -4,10 +4,10 @@ public class Main {
         Game game = new Game();
         //game.startGamePVP();
         //2 - the best heuristic
-        int heuristicNumber = 1;
+        int heuristicNumber = 2;
         //game.startGamePVPWithMinMaxAndEvaluation(heuristicNumber);
-        game.startGameAIvsAI(heuristicNumber);
-        //game.startGameWhiteVsAI(heuristicNumber);
-        //game.startGameBlackVsAI(heuristicNumber);
+        game.startGameAIvsAI(heuristicNumber, "minmax");
+        //game.startGameWhiteVsAI(heuristicNumber, "minmax");
+        //game.startGameBlackVsAI(heuristicNumber, "minmax");
     }
 }

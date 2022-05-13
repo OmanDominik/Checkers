@@ -163,10 +163,10 @@ public class Game {
         reset();
     }
 
-    public void startGameAIvsAI(int heuristicNumber) {
+    public void startGameAIvsAI(int heuristicNumber, String method) {
         queensMoves = 0;
-        int whiteMoves=0;
-        int blackMoves=0;
+        int whiteMoves = 0;
+        int blackMoves = 0;
         List<Long> whiteTime = new ArrayList<>();
         List<Long> blackTime = new ArrayList<>();
         long beforeWhiteMove;
@@ -183,6 +183,9 @@ public class Game {
             displayEvaluation(heuristicNumber);
             if (lookForWhites()) {
                 System.out.println(Colors.ANSI_CYAN + "Blacks won!!!");
+                System.out.println(Colors.ANSI_YELLOW + "Time spent for black moves: " +
+                        (double) (blackTime.stream().collect(Collectors.summingLong(Long::longValue))) / 1000d + " seconds");
+                System.out.println("Black moves: " + blackMoves);
                 break;
             }
 
@@ -191,20 +194,26 @@ public class Game {
             possibleMoves = getWhitePossibleMoves(board);
             if (possibleMoves.isEmpty()) {
                 System.out.println(Colors.ANSI_CYAN + "Blacks won!!!");
+                System.out.println(Colors.ANSI_YELLOW + "Time spent for black moves: " +
+                        (double) (blackTime.stream().collect(Collectors.summingLong(Long::longValue))) / 1000d + " seconds");
+                System.out.println("Black moves: " + blackMoves);
                 break;
             }
 
-            move = returnSuggestedMove("whites", deepCopy(board), heuristicNumber);
+            move = returnSuggestedMove("whites", deepCopy(board), heuristicNumber, method);
             makeMove(board, move, true);
             whiteMoves++;
             afterWhiteMove = System.currentTimeMillis();
-            whiteTime.add(afterWhiteMove-beforeWhiteMove);
+            whiteTime.add(afterWhiteMove - beforeWhiteMove);
 
             System.out.println(Colors.ANSI_GREEN + "The state of the board:" + Colors.ANSI_RESET);
             displayBoard();
             displayEvaluation(heuristicNumber);
             if (lookForBlacks()) {
                 System.out.println(Colors.ANSI_CYAN + "Whites won!!!");
+                System.out.println(Colors.ANSI_YELLOW + "Time spent for white moves: " +
+                        (double) (whiteTime.stream().collect(Collectors.summingLong(Long::longValue))) / 1000d + " seconds");
+                System.out.println("White moves: " + whiteMoves);
                 break;
             }
 
@@ -213,29 +222,32 @@ public class Game {
             possibleMoves = getBlackPossibleMoves(board);
             if (possibleMoves.isEmpty()) {
                 System.out.println(Colors.ANSI_CYAN + "Whites won!!!");
+                System.out.println(Colors.ANSI_YELLOW + "Time spent for white moves: " +
+                        (double) (whiteTime.stream().collect(Collectors.summingLong(Long::longValue))) / 1000d + " seconds");
+                System.out.println("White moves: " + whiteMoves);
                 break;
             }
 
-            move = returnSuggestedMove("blacks", deepCopy(board), heuristicNumber);
+            move = returnSuggestedMove("blacks", deepCopy(board), heuristicNumber, method);
             makeMove(board, move, true);
             blackMoves++;
             afterBlackMove = System.currentTimeMillis();
-            blackTime.add(afterBlackMove-beforeBlackMove);
+            blackTime.add(afterBlackMove - beforeBlackMove);
         }
         if (queensMoves >= 15) {
             System.out.println(Colors.ANSI_CYAN + "It's a draw!!!");
             System.out.println(Colors.ANSI_YELLOW + "Time spent for white moves: " +
-                    (whiteTime.stream().collect(Collectors.summingLong(Long::longValue)))/1000 + " seconds");
+                    (double) (whiteTime.stream().collect(Collectors.summingLong(Long::longValue))) / 1000d + " seconds");
             System.out.println("White moves: " + whiteMoves);
             System.out.println(Colors.ANSI_YELLOW + "Time spent for black moves: " +
-                    (blackTime.stream().collect(Collectors.summingLong(Long::longValue)))/1000 + " seconds");
+                    (double) (blackTime.stream().collect(Collectors.summingLong(Long::longValue))) / 1000d + " seconds");
             System.out.println("Black moves: " + blackMoves);
         }
         System.out.println(Colors.ANSI_BLUE + "Thanks for game!");
         reset();
     }
 
-    public void startGameWhiteVsAI(int heuristicNumber) {
+    public void startGameWhiteVsAI(int heuristicNumber, String method) {
         queensMoves = 0;
         Scanner scan = new Scanner(System.in);
         int move;
@@ -279,7 +291,7 @@ public class Game {
                 break;
             }
 
-            AiMove = returnSuggestedMove("blacks", deepCopy(board), heuristicNumber);
+            AiMove = returnSuggestedMove("blacks", deepCopy(board), heuristicNumber, method);
             makeMove(board, AiMove, true);
 
         }
@@ -290,7 +302,7 @@ public class Game {
         reset();
     }
 
-    public void startGameBlackVsAI(int heuristicNumber) {
+    public void startGameBlackVsAI(int heuristicNumber, String method) {
         queensMoves = 0;
         Scanner scan = new Scanner(System.in);
         String AiMove;
@@ -313,7 +325,7 @@ public class Game {
                 break;
             }
 
-            AiMove = returnSuggestedMove("whites", deepCopy(board), heuristicNumber);
+            AiMove = returnSuggestedMove("whites", deepCopy(board), heuristicNumber, method);
             makeMove(board, AiMove, true);
 
             System.out.println(Colors.ANSI_GREEN + "The state of the board:" + Colors.ANSI_RESET);
@@ -459,7 +471,7 @@ public class Game {
             }
         }
         if (move.endsWith("beat!")) {
-            if(inGame)
+            if (inGame)
                 queensMoves = 0;
             List<Integer> indexes = new ArrayList<>();
             for (int i = 0; i < move.length(); i++) {
@@ -473,7 +485,7 @@ public class Game {
                 if (pawn == 'w')
                     board.get(indexes.get(indexes.size() - 2)).set(indexes.get(indexes.size() - 1), 'W');
             }
-            if(indexes.get(indexes.size() - 2) == BOARD_SIZE - 1){
+            if (indexes.get(indexes.size() - 2) == BOARD_SIZE - 1) {
                 if (pawn == 'b')
                     board.get(indexes.get(indexes.size() - 2)).set(indexes.get(indexes.size() - 1), 'B');
             }
@@ -483,7 +495,7 @@ public class Game {
 
         }
         if (move.endsWith("beatQ")) {
-            if(inGame)
+            if (inGame)
                 queensMoves = 0;
             List<Integer> indexes = new ArrayList<>();
             for (int i = 0; i < move.length(); i++) {
@@ -1054,18 +1066,24 @@ public class Game {
 
         TreeNode root = new TreeNode(gameBoard, evaluation(gameBoard, heuristicNumber), "-");
         buildChoicesTree(root, 0, color, heuristicNumber);
-        int minMax = findBestMove(root, 0, color);
+        int minMax = findBestMoveAlfaBeta(root, 0, color, Integer.MIN_VALUE, Integer.MAX_VALUE);
         move = root.getMove();
 
         System.out.println(Colors.ANSI_RED + "Move suggested by MIN-MAX alghortm: " + move);
     }
 
-    private String returnSuggestedMove(String color, List<List<Character>> gameBoard, int heuristicNumber) {
+    private String returnSuggestedMove(String color, List<List<Character>> gameBoard, int heuristicNumber, String option) {
         String move;
+        int minMax;
+        int alfabeta;
 
         TreeNode root = new TreeNode(gameBoard, evaluation(gameBoard, heuristicNumber), "-");
         buildChoicesTree(root, 0, color, heuristicNumber);
-        int minMax = findBestMove(root, 0, color);
+        if (option == "minmax")
+            minMax = findBestMoveMinMax(root, 0, color);
+        else if (option == "alfabeta")
+            alfabeta = findBestMoveAlfaBeta(root, 0, color, Integer.MIN_VALUE, Integer.MAX_VALUE);
+
         move = root.getMove();
 
         return move;
@@ -1095,7 +1113,7 @@ public class Game {
         }
     }
 
-    private int findBestMove(TreeNode root, int depth, String actualColor) {
+    private int findBestMoveMinMax(TreeNode root, int depth, String actualColor) {
 
         if (depth == MIN_MAX_DEPTH - 1) {
             return root.getRate();
@@ -1107,7 +1125,7 @@ public class Game {
                 return root.getRate();
             List<TreeNode> children = root.getChildren();
             for (int i = 0; i < children.size(); i++) {
-                int value = findBestMove(children.get(i), depth + 1, "blacks");
+                int value = findBestMoveMinMax(children.get(i), depth + 1, "blacks");
                 if (value > maximum) {
                     maximum = value;
                     if (depth == 0)
@@ -1121,12 +1139,54 @@ public class Game {
                 return root.getRate();
             List<TreeNode> children = root.getChildren();
             for (int i = 0; i < children.size(); i++) {
-                int value = findBestMove(children.get(i), depth + 1, "whites");
+                int value = findBestMoveMinMax(children.get(i), depth + 1, "whites");
                 if (value < minimum) {
                     minimum = value;
                     if (depth == 0)
                         root.setMove(children.get(i).getMove());
                 }
+            }
+            return minimum;
+        }
+        return 0;
+    }
+
+    private int findBestMoveAlfaBeta(TreeNode root, int depth, String actualColor, int alfa, int beta) {
+
+        if (depth == MIN_MAX_DEPTH - 1 || root.getChildren().size() == 0) {
+            return root.getRate();
+        }
+
+        if (actualColor == "whites") {
+            int maximum = Integer.MIN_VALUE;
+            List<TreeNode> children = root.getChildren();
+
+            for (int i = 0; i < children.size(); i++) {
+                int value = findBestMoveAlfaBeta(children.get(i), depth + 1, "blacks", alfa, beta);
+                if (value > maximum) {
+                    maximum = value;
+                    if (depth == 0)
+                        root.setMove(children.get(i).getMove());
+                }
+                alfa = Math.max(alfa, value);
+                if (beta <= alfa)
+                    break;
+            }
+            return maximum;
+        } else if (actualColor == "blacks") {
+            int minimum = Integer.MAX_VALUE;
+            List<TreeNode> children = root.getChildren();
+
+            for (int i = 0; i < children.size(); i++) {
+                int value = findBestMoveAlfaBeta(children.get(i), depth + 1, "whites", alfa, beta);
+                if (value < minimum) {
+                    minimum = value;
+                    if (depth == 0)
+                        root.setMove(children.get(i).getMove());
+                }
+                beta = Math.min(beta, value);
+                if (beta <= alfa)
+                    break;
             }
             return minimum;
         }
